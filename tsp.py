@@ -9,21 +9,30 @@ import time
 # print(sys.argv[1])
 
 if len(sys.argv)==1:
-    filename="a280.tsp"
+    filename="kroC100.tsp"
     print(f"TSP problem used:   {filename}")
-    iterations=50000
+    iterations=100000
     print(f"Num. iterations:    {iterations}")
-    interval = 1000
+    interval = 10000
     print(f"Interval:           {interval}")
-    pop_size=10
+    pop_size=50
+    if pop_size%2 == 1: 
+        print("Population size must be even")
+        sys.exit()
     n_next_gen = math.floor(pop_size/3)
     print(f"Population size:    {pop_size}")
-    mutation_rate = 1/pop_size
+    mutation_rate = 0.1
     print(f"Mutation rate:      {mutation_rate}")
+    early_stop = False
+    if early_stop:  print(f"Early stop:         True")
+    else:           print(f"Early stop:         False")
+    outputs = True
+    if outputs:  print(f"Show outputs:       True")
+    else:           print(f"Show outputs:       False")
     
 
-elif len(sys.argv)!=5:
-    print("Command run as follows: python tsp.py filename iterations pop_size mutation_rate")
+elif len(sys.argv)!=7:
+    print("Command run as follows: python tsp.py filename iterations pop_size mutation_rate early_stop")
     sys.exit()
 
 
@@ -39,9 +48,17 @@ def write_gen_results(population, iter):
         file.write(f"\nIndividual {i}, Fitness = {fitnessess[i]}")
 
 def iteration(population):
-    min_in, _ = population.get_best_fitness()
-    res = f.population(G,[population.individuals[min_in]])
-    return res  
+    fits = population.get_fitnesses()
+
+    p1 = np.argmin(fits)
+    fits = np.delete(fits, p1)
+    p2 = np.argmin(fits)
+
+    return f.population(G, 
+    [
+        f.individual(G, population.individuals[p1].edge_list),
+        f.individual(G, population.individuals[p2].edge_list)
+    ])
 
 start = time.time()
 
@@ -55,26 +72,30 @@ for i in range(iterations):
     write_gen_results(population,i)
 
     next_gen = iteration(population)
-    best = population.individuals[0]
-    hist.append(best.get_fitness())
+    next_gen_paths = next_gen.get_paths()
     
-    population = f.create_next_gen(next_gen, pop_size)
+    i_best, best = next_gen.get_best_fitness()
+    hist.append(best)
+    
+    population = f.create_next_gen(next_gen, pop_size, mutation_rate=mutation_rate)
 
     if i%interval==0:  
-        if i>0 and best.get_fitness() >= hist[math.floor(i-(interval/2))]: 
+        if early_stop and i>0 and best >= hist[math.floor(i-(interval/2))]: 
             print("Progress has stagnated")
             break
-        f.plot_figure(G, best.edge_list, name="results/"+str(i))
+        if outputs:
+            f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+str(i))
         print(i)
 
 write_gen_results(population,i)
-f.plot_figure(G, best.edge_list, name="results/"+str(i))
+f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+str(i))
 
-print(f"It took {time.time()-start:.1f}")
+print(f"It took {time.time()-start:.1f} seconds")
 
 plt.clf()
 plt.plot(hist)
 plt.savefig("results/progress.png")
+plt.close()
 
 # for i in range(len(next_gen.individuals)):
 #     f.plot_figure(G, next_gen.individuals[i].edge_list, name=str(i))

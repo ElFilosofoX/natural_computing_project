@@ -3,6 +3,8 @@ import networkx as nx
 import tsplib95
 import matplotlib.pyplot as plt
 import math
+from random import sample
+
 
 
 def generate_random_inividual(G):
@@ -16,6 +18,38 @@ def mutate(ind):
     path = ind.get_path()
     path = swap_positions_path(path)
     return individual(ind.G,get_edge_list(path))
+
+def crossover(parent1, parent2):
+    if np.random.rand()>0.5:
+        parent1, parent2 = parent2, parent1
+
+    child = []
+    cuts = [np.random.randint(len(parent1)), np.random.randint(len(parent1))]
+    
+    for i in range(min(cuts), max(cuts)):
+        child.append(parent1[i])
+
+    child = child + [i for i in parent2 if i not in child]
+
+    return np.array(child)
+
+def create_next_gen(pop, target_size, mutation_rate=True):
+    if len(pop.individuals)==0: return generate_random_population(pop.G)
+    gen= pop
+    if mutation_rate: mutation_rate = 1/target_size
+
+    n = target_size - len(pop.individuals)
+
+    for i in range(n):
+        offspring = crossover(pop.individuals[0].get_path(),pop.individuals[1].get_path())
+        offspring = individual(pop.G, get_edge_list(offspring))
+
+        if np.random.rand()<mutation_rate:
+            offspring = mutate(offspring)
+        
+        gen.append_individual(offspring)
+
+    return gen
 
 def node_positions(G):
     dictionary = dict()
@@ -65,16 +99,6 @@ def generate__random_path(G):
     np.random.shuffle(arr)
     return arr
 
-def create_next_gen(population, target_size):
-    if len(population.individuals)==0: return generate_random_population(population.G)
-    gen = population
-    best = population.individuals[0]
-    n = target_size - len(population.individuals)
-    for i in range(n):
-        gen.append_individual(mutate(best))
-
-    return gen
-
 def plot_figure(G, edge_list, name="output.png", node_size=20, fig_size=5, title="fitness"):
     plt.clf()
     layout = node_positions(G)
@@ -117,6 +141,9 @@ class population:
 
     def get_fitnesses(self):
         return [i.get_fitness() for i in self.individuals]
+
+    def get_paths(self):
+        return [i.get_path() for i in self.individuals]
 
     def get_best_fitness(self):
         return np.argmin(self.get_fitnesses()), np.amin(self.get_fitnesses())
