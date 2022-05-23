@@ -8,7 +8,7 @@ from random import sample
 
 
 def generate_random_inividual(G):
-    path = generate__random_path(G)
+    path = generate_random_path(G)
     return individual(G, get_edge_list(path))
 
 def generate_random_population(G,pop_size=10):
@@ -41,12 +41,33 @@ def create_next_gen(pop, target_size, mutation_rate=True):
     if mutation_rate: mutation_rate = 1/target_size
 
     n = target_size - len(pop.individuals)
+    n_inbred = math.floor(n/4)
+    n_close_neigh = n_inbred
+    n_random = n-n_inbred-n_close_neigh
 
-    for i in range(n):
+    for i in range(n_inbred):
         offspring = crossover(pop.individuals[0].get_path(),pop.individuals[1].get_path())
         offspring = individual(pop.G, get_edge_list(offspring))
 
-        if np.random.rand()<mutation_rate:
+        while np.random.rand()<mutation_rate:
+            offspring = mutate(offspring)
+        
+        gen.append_individual(offspring)
+    
+    for i in range(n_close_neigh):
+        offspring = crossover(pop.individuals[0].get_path(),closest_neighbour_alg(pop.G))
+        offspring = individual(pop.G, get_edge_list(offspring))
+
+        while np.random.rand()<mutation_rate:
+            offspring = mutate(offspring)
+        
+        gen.append_individual(offspring)
+
+    for i in range(n_random):
+        offspring = crossover(pop.individuals[0].get_path(),generate_random_path(pop.G))
+        offspring = individual(pop.G, get_edge_list(offspring))
+
+        while np.random.rand()<mutation_rate:
             offspring = mutate(offspring)
         
         gen.append_individual(offspring)
@@ -117,7 +138,7 @@ def swap_positions_path(path):
     path[pos[0]], path[pos[1]] = path[pos[1]], path[pos[0]]
     return path
 
-def generate__random_path(G):
+def generate_random_path(G):
     arr=np.array(G.nodes)
     np.random.shuffle(arr)
     return arr

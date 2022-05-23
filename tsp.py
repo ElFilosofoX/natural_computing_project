@@ -9,11 +9,11 @@ import time
 # print(sys.argv[1])
 
 if len(sys.argv)==1:
-    filename="kroC100.tsp"
+    filename="a280.tsp"
     print(f"TSP problem used:   {filename}")
-    iterations=100000
+    iterations=10
     print(f"Num. iterations:    {iterations}")
-    interval = 10000
+    interval = 5
     print(f"Interval:           {interval}")
     pop_size=50
     if pop_size%2 == 1: 
@@ -90,10 +90,12 @@ for i in range(iterations):
 write_gen_results(population,i)
 f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+str(i))
 
-print(f"It took {time.time()-start:.1f} seconds")
+took = time.time()-start
+print(f"It took {took:.1f} seconds")
 
 plt.clf()
 plt.plot(hist)
+plt.title(f"Population size: {pop_size}, {took:.1f} seconds")
 plt.savefig("results/progress.png")
 plt.close()
 
