@@ -11,11 +11,11 @@ import time
 if len(sys.argv)==1:
     filename="a280.tsp"
     print(f"TSP problem used:   {filename}")
-    iterations=10
+    iterations=1000
     print(f"Num. iterations:    {iterations}")
-    interval = 5
+    interval = 100
     print(f"Interval:           {interval}")
-    pop_size=50
+    pop_size=20
     if pop_size%2 == 1: 
         print("Population size must be even")
         sys.exit()
@@ -41,7 +41,7 @@ def write_gen_results(population, iter):
     else:           file = open("results/results.txt","a")
 
     fitnessess = population.get_fitnesses()
-    best_in, _ = population.get_best_fitness()
+    best_in, _, _ = population.get_fitness_data()
     file.write(f"\nIteration {iter} results: \nBest fitness = {fitnessess[best_in]}\n")
 
     for i in range(len(population.individuals)):
@@ -64,23 +64,28 @@ start = time.time()
 
 G = f.get_graph_from_file(filename)
 population = f.generate_random_population(G,pop_size)
+# population = f.generate_random_population(G,pop_size-1)
+# population.append_individual(f.individual(G, f.get_edge_list(f.closest_neighbour_alg(G))))
 
 f.plot_figure(G, f.get_edge_list([]), title=filename, name="results/base")
 
-hist=[]
+bests=[]
+means=[]
+
 for i in range(iterations):
     write_gen_results(population,i)
 
     next_gen = iteration(population)
     next_gen_paths = next_gen.get_paths()
     
-    i_best, best = next_gen.get_best_fitness()
-    hist.append(best)
+    i_best, best, mean = next_gen.get_fitness_data()
+    bests.append(best)
+    means.append(mean)
     
     population = f.create_next_gen(next_gen, pop_size, mutation_rate=mutation_rate)
 
     if i%interval==0:  
-        if early_stop and i>0 and best >= hist[math.floor(i-(interval/2))]: 
+        if early_stop and i>0 and best >= bests[math.floor(i-(interval/2))]: 
             print("Progress has stagnated")
             break
         if outputs:
@@ -94,7 +99,11 @@ took = time.time()-start
 print(f"It took {took:.1f} seconds")
 
 plt.clf()
-plt.plot(hist)
+plt.plot(bests, label="Best fitness")
+plt.plot(means, label="Mean")
+plt.legend()
+plt.xlabel("Generation")
+plt.ylabel("Fitness")
 plt.title(f"Population size: {pop_size}, {took:.1f} seconds")
 plt.savefig("results/progress.png")
 plt.close()

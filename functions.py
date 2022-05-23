@@ -41,36 +41,37 @@ def create_next_gen(pop, target_size, mutation_rate=True):
     if mutation_rate: mutation_rate = 1/target_size
 
     n = target_size - len(pop.individuals)
-    n_inbred = math.floor(n/4)
-    n_close_neigh = n_inbred
-    n_random = n-n_inbred-n_close_neigh
+    n_inbred = math.floor(n/3)
+    n_random = n-n_inbred
 
+    #inbreedings
     for i in range(n_inbred):
-        offspring = crossover(pop.individuals[0].get_path(),pop.individuals[1].get_path())
-        offspring = individual(pop.G, get_edge_list(offspring))
+        parents = np.random.choice(pop.individuals,2,replace=False)
 
+        offspring = crossover(parents[0].get_path(),parents[1].get_path())
+        offspring = individual(pop.G, get_edge_list(offspring))
+        while np.random.rand()<mutation_rate:
+            offspring = mutate(offspring)
+        
+        gen.append_individual(offspring)
+
+    #random crossbreedings    
+    # for i in range(n_random-1): 
+    for i in range(n_random):         
+        parent = np.random.choice(pop.individuals)
+        offspring = crossover(parent.get_path(),generate_random_path(pop.G))
+        offspring = individual(pop.G, get_edge_list(offspring))
         while np.random.rand()<mutation_rate:
             offspring = mutate(offspring)
         
         gen.append_individual(offspring)
     
-    for i in range(n_close_neigh):
-        offspring = crossover(pop.individuals[0].get_path(),closest_neighbour_alg(pop.G))
-        offspring = individual(pop.G, get_edge_list(offspring))
-
-        while np.random.rand()<mutation_rate:
-            offspring = mutate(offspring)
-        
-        gen.append_individual(offspring)
-
-    for i in range(n_random):
-        offspring = crossover(pop.individuals[0].get_path(),generate_random_path(pop.G))
-        offspring = individual(pop.G, get_edge_list(offspring))
-
-        while np.random.rand()<mutation_rate:
-            offspring = mutate(offspring)
-        
-        gen.append_individual(offspring)
+    # offspring = crossover(np.random.choice(pop.individuals).get_path(),closest_neighbour_alg(pop.G))
+    # offspring = individual(pop.G, get_edge_list(offspring))
+    # while np.random.rand()<mutation_rate:
+    #     offspring = mutate(offspring)
+    
+    # gen.append_individual(offspring)
 
     return gen
 
@@ -189,8 +190,9 @@ class population:
     def get_paths(self):
         return [i.get_path() for i in self.individuals]
 
-    def get_best_fitness(self):
-        return np.argmin(self.get_fitnesses()), np.amin(self.get_fitnesses())
+    def get_fitness_data(self):
+        fits = self.get_fitnesses()
+        return np.argmin(fits), np.amin(fits),np.mean(fits)
 
     def append_individual(self, ind):
         self.individuals.append(ind)
