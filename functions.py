@@ -88,6 +88,27 @@ def get_fitness(G, edge_list):
 def get_path_from_edgelist(edge_list):
     return np.array([i[0] for i in edge_list])
 
+def closest_neighbour_alg(G):
+    N = len(G.nodes)
+    arr = np.arange(N) + 1
+
+    visit = [np.random.choice(arr)]
+
+    while len(arr) > 0:
+        next_city = 0
+        min_fit = np.inf
+        for i in arr:
+            if i not in visit:
+                fit = get_distance(G.nodes[i],G.nodes[visit[-1]])
+                if  fit < min_fit:  
+                    min_fit = fit
+                    next_city=i
+
+        if next_city == 0: break
+        visit.append(next_city)
+    
+    return np.array(visit)
+
 def swap_positions_path(path):
     pos = [0,0]
     while pos[0]==pos[1]:
