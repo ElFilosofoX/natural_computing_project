@@ -20,6 +20,7 @@ def mutate(ind):
     return individual(ind.G,get_edge_list(path))
 
 def crossover(parent1, parent2):
+    #it was supposed to generate 2 childs but for now it only generates 1
     if np.random.rand()>0.5:
         parent1, parent2 = parent2, parent1
 
@@ -34,6 +35,7 @@ def crossover(parent1, parent2):
     return np.array(child)
 
 def create_next_gen(pop, target_size, mutation_rate=True):
+    #maybe add random individuals to crossbreed can improve performance
     if len(pop.individuals)==0: return generate_random_population(pop.G)
     gen= pop
     if mutation_rate: mutation_rate = 1/target_size
