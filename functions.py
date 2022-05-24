@@ -38,7 +38,7 @@ def create_next_gen(pop, target_size, mutation_rate=True):
     #maybe add random individuals to crossbreed can improve performance
     if len(pop.individuals)==0: return generate_random_population(pop.G)
     gen= pop
-    if mutation_rate: mutation_rate = 1/target_size
+    if mutation_rate==True: mutation_rate = 1/target_size
 
     n = target_size - len(pop.individuals)
     n_inbred = math.floor(n/3)
@@ -56,7 +56,7 @@ def create_next_gen(pop, target_size, mutation_rate=True):
         gen.append_individual(offspring)
 
     #random crossbreedings    
-    # for i in range(n_random-1): 
+    # for i in range(n_random-1): #add this line to use the closest neighbour down
     for i in range(n_random):         
         parent = np.random.choice(pop.individuals)
         offspring = crossover(parent.get_path(),generate_random_path(pop.G))
@@ -76,11 +76,7 @@ def create_next_gen(pop, target_size, mutation_rate=True):
     return gen
 
 def node_positions(G):
-    dictionary = dict()
-
-    for i in range(1,len(G.nodes)+1):
-        dictionary[i] = G.nodes[i]['coord']
-
+    dictionary = nx.get_node_attributes(G,'coord')
     return dictionary
 
 def get_graph_from_file(filename):

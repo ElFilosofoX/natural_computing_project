@@ -1,3 +1,4 @@
+import enum
 import sys
 import functions as f
 import networkx as nx
@@ -9,11 +10,11 @@ import time
 # print(sys.argv[1])
 
 if len(sys.argv)==1:
-    filename="a280.tsp"
+    filename="att48.tsp"
     print(f"TSP problem used:   {filename}")
-    iterations=1000
+    iterations=10
     print(f"Num. iterations:    {iterations}")
-    interval = 100
+    interval = iterations/10
     print(f"Interval:           {interval}")
     pop_size=20
     if pop_size%2 == 1: 
@@ -49,16 +50,10 @@ def write_gen_results(population, iter):
 
 def iteration(population):
     fits = population.get_fitnesses()
+    fits = np.argsort(fits)[:n_next_gen]
 
-    p1 = np.argmin(fits)
-    fits = np.delete(fits, p1)
-    p2 = np.argmin(fits)
-
-    return f.population(G, 
-    [
-        f.individual(G, population.individuals[p1].edge_list),
-        f.individual(G, population.individuals[p2].edge_list)
-    ])
+    res = f.population(G,[population.individuals[i] for i in fits])
+    return res
 
 start = time.time()
 
