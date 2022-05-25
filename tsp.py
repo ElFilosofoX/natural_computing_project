@@ -12,11 +12,11 @@ import time
 if len(sys.argv)==1:
     filename="ch130.tsp"
     print(f"TSP problem used:   {filename}")
-    iterations=10000
+    iterations=5000
     print(f"Num. iterations:    {iterations}")
     interval = iterations/10
     print(f"Interval:           {interval}")
-    pop_size=50
+    pop_size=100
     if pop_size%2 == 1: 
         print("Population size must be even")
         sys.exit()
@@ -88,6 +88,7 @@ for i in range(iterations):
         print(i)
 
 write_gen_results(population,i)
+population.save_gen(f"{filename[:-4]}_gen_{i}")
 f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+str(i))
 
 took = time.time()-start

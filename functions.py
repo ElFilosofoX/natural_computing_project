@@ -184,7 +184,7 @@ class individual:
         self.edge_list = get_edge_list(path)
 
     def save_individual(self, filename="individual"):
-        with open(filename + ".pkl","wb") as outp:
+        with open("results/"+filename + ".pkl","wb") as outp:
             pickle.dump(self,outp,pickle.HIGHEST_PROTOCOL)
 
     
@@ -212,7 +212,7 @@ class population:
         self.individuals.append(ind)
 
     def save_gen(self, filename="last_gen"):
-        with open(filename + ".pkl","wb") as outp:
+        with open("results/"+filename + ".pkl","wb") as outp:
             pickle.dump(self,outp,pickle.HIGHEST_PROTOCOL)
 
     
