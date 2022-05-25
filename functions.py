@@ -4,6 +4,7 @@ import tsplib95
 import matplotlib.pyplot as plt
 import math
 from random import sample
+import pickle
 
 
 
@@ -154,6 +155,17 @@ def plot_figure(G, edge_list, name="output.png", node_size=20, fig_size=5, title
     plt.close()
     
 
+def load_gen(filename="last_gen"):
+    with open(filename + ".pkl","rb") as inp:
+        gen = pickle.load(inp)
+    return gen
+
+def load_individual(filename="individual"):
+        with open(filename + ".pkl","rb") as inp:
+            individual = pickle.load(inp)
+        return individual
+
+
 class individual:
     def __init__(self, g, edge_list):
         self.G = g
@@ -170,6 +182,12 @@ class individual:
 
     def set_path(self, path):
         self.edge_list = get_edge_list(path)
+
+    def save_individual(self, filename="individual"):
+        with open(filename + ".pkl","wb") as outp:
+            pickle.dump(self,outp,pickle.HIGHEST_PROTOCOL)
+
+    
 
 
 class population:
@@ -192,3 +210,9 @@ class population:
 
     def append_individual(self, ind):
         self.individuals.append(ind)
+
+    def save_gen(self, filename="last_gen"):
+        with open(filename + ".pkl","wb") as outp:
+            pickle.dump(self,outp,pickle.HIGHEST_PROTOCOL)
+
+    

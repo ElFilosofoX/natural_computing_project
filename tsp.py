@@ -10,13 +10,13 @@ import time
 # print(sys.argv[1])
 
 if len(sys.argv)==1:
-    filename="att48.tsp"
+    filename="ch130.tsp"
     print(f"TSP problem used:   {filename}")
-    iterations=10
+    iterations=10000
     print(f"Num. iterations:    {iterations}")
     interval = iterations/10
     print(f"Interval:           {interval}")
-    pop_size=20
+    pop_size=50
     if pop_size%2 == 1: 
         print("Population size must be even")
         sys.exit()
