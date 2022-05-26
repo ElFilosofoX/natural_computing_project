@@ -42,32 +42,33 @@ def create_next_gen(pop, target_size, mutation_rate=True):
     if mutation_rate==True: mutation_rate = 1/target_size
 
     n = target_size - len(pop.individuals)
-    n_inbred = math.floor(n/3)
-    n_random = n-n_inbred
-
+    # n_inbred = math.floor(n/3)
+    # n_random = n-n_inbred
+    
     #inbreedings
-    for i in range(n_inbred):
-        parents = tournament_selection(gen)
-
-        offspring = crossover(parents[0].get_path(),parents[1].get_path())
+    parents = gen.individuals
+    for i in range(n):
+        [p1, p2] =np.random.choice(parents, size=2)
+        offspring = crossover(p1.get_path(), p2.get_path())
         offspring = individual(pop.G, get_edge_list(offspring))
+
         while np.random.rand()<mutation_rate:
             offspring = mutate(offspring)
         
         gen.append_individual(offspring)
 
     #random crossbreedings    
-    # for i in range(n_random-1): #add this line to use the closest neighbour down
-    for i in range(n_random):         
-        parent = np.random.choice(pop.individuals)
-        offspring = crossover(parent.get_path(),generate_random_path(pop.G))
-        offspring = individual(pop.G, get_edge_list(offspring))
-        while np.random.rand()<mutation_rate:
-            offspring = mutate(offspring)
+    # for i in range(n_random-1): #add this line to use the closest neighbor down
+    # for i in range(n_random):         
+    #     parent = np.random.choice(pop.individuals)
+    #     offspring = crossover(parent.get_path(),generate_random_path(pop.G))
+    #     offspring = individual(pop.G, get_edge_list(offspring))
+    #     while np.random.rand()<mutation_rate:
+    #         offspring = mutate(offspring)
         
-        gen.append_individual(offspring)
+    #     gen.append_individual(offspring)
     
-    # offspring = crossover(np.random.choice(pop.individuals).get_path(),closest_neighbour_alg(pop.G))
+    # offspring = crossover(np.random.choice(pop.individuals).get_path(),closest_neighbor_alg(pop.G))
     # offspring = individual(pop.G, get_edge_list(offspring))
     # while np.random.rand()<mutation_rate:
     #     offspring = mutate(offspring)
@@ -107,7 +108,7 @@ def get_fitness(G, edge_list):
 def get_path_from_edgelist(edge_list):
     return np.array([i[0] for i in edge_list])
 
-def closest_neighbour_alg(G):
+def closest_neighbor_alg(G):
     N = len(G.nodes)
     arr = np.arange(N) + 1
     np.random.shuffle(arr)
@@ -159,7 +160,6 @@ def plot_figure(G, edge_list, name="output.png", node_size=20, fig_size=5, title
     plt.savefig(name, dpi=100)
     plt.close()
     
-
 def load_gen(filename="last_gen"):
     with open(filename + ".pkl","rb") as inp:
         gen = pickle.load(inp)
