@@ -110,13 +110,13 @@ def get_path_from_edgelist(edge_list):
 def closest_neighbour_alg(G):
     N = len(G.nodes)
     arr = np.arange(N) + 1
-
+    np.random.shuffle(arr)
     visit = [np.random.choice(arr)]
 
     while True:
         next_city = 0
         min_fit = np.inf
-        for i in np.random.shuffle(arr):
+        for i in arr:
             if i not in visit:
                 fit = get_distance(G.nodes[i],G.nodes[visit[-1]])
                 if  fit < min_fit:  

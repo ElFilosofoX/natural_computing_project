@@ -10,13 +10,13 @@ import time
 # print(sys.argv[1])
 
 if len(sys.argv)==1:
-    filename="ch130.tsp"
+    filename="bier127.tsp"
     print(f"TSP problem used:   {filename}")
-    iterations=5000
+    iterations=10000
     print(f"Num. iterations:    {iterations}")
     interval = iterations/10
     print(f"Interval:           {interval}")
-    pop_size=100
+    pop_size=50
     if pop_size%2 == 1: 
         print("Population size must be even")
         sys.exit()
@@ -38,8 +38,8 @@ elif len(sys.argv)!=7:
 
 
 def write_gen_results(population, iter):
-    if iter == 0:   file = open("results/results.txt","w")
-    else:           file = open("results/results.txt","a")
+    if iter == 0:   file = open("results/results" + filename[:-4] + ".txt","w")
+    else:           file = open("results/results" + filename[:-4] + ".txt","a")
 
     fitnessess = population.get_fitnesses()
     best_in, _, _ = population.get_fitness_data()
@@ -60,22 +60,22 @@ start = time.time()
 G = f.get_graph_from_file(filename)
 
 #random generation
-# population = f.generate_random_population(G,pop_size)
+population = f.generate_random_population(G,pop_size)
 
 #1 individual is generated with closest neighbour alg
 # population = f.generate_random_population(G,pop_size-1)
 # population.append_individual(f.individual(G, f.get_edge_list(f.closest_neighbour_alg(G))))
 
 #loading generation
-population = f.load_gen("results/"+filename[:-4]+"_gen_14999")
+# population = f.load_gen("results/"+filename[:-4]+"_gen_14999")
 
-f.plot_figure(G, f.get_edge_list([]), title=filename, name="results/base")
+f.plot_figure(G, f.get_edge_list([]), title=filename, name="results/" + filename[:-4])
 
 bests=[]
 means=[]
 
 for i in range(iterations):
-    write_gen_results(population,i+15000)
+    write_gen_results(population,i)
 
     next_gen = iteration(population)
     next_gen_paths = next_gen.get_paths()
@@ -91,12 +91,12 @@ for i in range(iterations):
             print("Progress has stagnated")
             break
         if outputs:
-            f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+str(i+15000))
+            f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+ filename[:-4] + "_"+ str(i))
         print(i)
 
-write_gen_results(population,i+15000)
-population.save_gen(f"{filename[:-4]}_gen_{i+15000}")
-f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+str(i+15000))
+write_gen_results(population,i)
+population.save_gen(f"{filename[:-4]}_gen_{i}")
+f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+str(i))
 
 took = time.time()-start
 print(f"It took {took:.1f} seconds")
