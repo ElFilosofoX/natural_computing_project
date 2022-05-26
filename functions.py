@@ -113,10 +113,10 @@ def closest_neighbour_alg(G):
 
     visit = [np.random.choice(arr)]
 
-    while len(arr) > 0:
+    while True:
         next_city = 0
         min_fit = np.inf
-        for i in arr:
+        for i in np.random.shuffle(arr):
             if i not in visit:
                 fit = get_distance(G.nodes[i],G.nodes[visit[-1]])
                 if  fit < min_fit:  

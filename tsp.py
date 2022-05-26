@@ -58,9 +58,16 @@ def iteration(population):
 start = time.time()
 
 G = f.get_graph_from_file(filename)
-population = f.generate_random_population(G,pop_size)
+
+#random generation
+# population = f.generate_random_population(G,pop_size)
+
+#1 individual is generated with closest neighbour alg
 # population = f.generate_random_population(G,pop_size-1)
 # population.append_individual(f.individual(G, f.get_edge_list(f.closest_neighbour_alg(G))))
+
+#loading generation
+population = f.load_gen("results/"+filename[:-4]+"_gen_14999")
 
 f.plot_figure(G, f.get_edge_list([]), title=filename, name="results/base")
 
@@ -68,7 +75,7 @@ bests=[]
 means=[]
 
 for i in range(iterations):
-    write_gen_results(population,i)
+    write_gen_results(population,i+15000)
 
     next_gen = iteration(population)
     next_gen_paths = next_gen.get_paths()
@@ -84,12 +91,12 @@ for i in range(iterations):
             print("Progress has stagnated")
             break
         if outputs:
-            f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+str(i))
+            f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+str(i+15000))
         print(i)
 
-write_gen_results(population,i)
-population.save_gen(f"{filename[:-4]}_gen_{i}")
-f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+str(i))
+write_gen_results(population,i+15000)
+population.save_gen(f"{filename[:-4]}_gen_{i+15000}")
+f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+str(i+15000))
 
 took = time.time()-start
 print(f"It took {took:.1f} seconds")
