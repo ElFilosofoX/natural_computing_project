@@ -80,6 +80,7 @@ def experiment(filename="bier127.tsp", iterations=1000, interval = 100, pop_size
     f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+ filename[:-4] + "_"+ str(i))
 
     took = time.time()-start
+    print(f"Best fitness: {next_gen.individuals[i_best].fitness}")
     # print(f"It took {took:.1f} seconds")
 
     plt.clf()
