@@ -96,7 +96,7 @@ for i in range(iterations):
 
 write_gen_results(population,i)
 population.save_gen(f"{filename[:-4]}_gen_{i}")
-f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+str(i))
+f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+ filename[:-4] + "_"+ str(i))
 
 took = time.time()-start
 print(f"It took {took:.1f} seconds")
