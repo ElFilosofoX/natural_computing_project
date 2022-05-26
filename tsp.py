@@ -12,7 +12,7 @@ import time
 if len(sys.argv)==1:
     filename="a280.tsp"
     print(f"TSP problem used:   {filename}")
-    iterations=10000
+    iterations=1000
     print(f"Num. iterations:    {iterations}")
     interval = iterations/10
     print(f"Interval:           {interval}")

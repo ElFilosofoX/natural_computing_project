@@ -38,7 +38,7 @@ def crossover(parent1, parent2):
 def create_next_gen(pop, target_size, mutation_rate=True):
     #maybe add random individuals to crossbreed can improve performance
     if len(pop.individuals)==0: return generate_random_population(pop.G)
-    gen= pop
+    gen = pop
     if mutation_rate==True: mutation_rate = 1/target_size
 
     n = target_size - len(pop.individuals)
@@ -47,7 +47,7 @@ def create_next_gen(pop, target_size, mutation_rate=True):
 
     #inbreedings
     for i in range(n_inbred):
-        parents = np.random.choice(pop.individuals,2,replace=False)
+        parents = tournament_selection(gen)
 
         offspring = crossover(parents[0].get_path(),parents[1].get_path())
         offspring = individual(pop.G, get_edge_list(offspring))
@@ -136,6 +136,11 @@ def swap_positions_path(path):
     path[pos[0]], path[pos[1]] = path[pos[1]], path[pos[0]]
     return path
 
+def tournament_selection(population,n=5):
+    parents = np.random.choice(population.individuals, size=n)
+    parents = sorted(parents, key=lambda agent: agent.fitness, reverse=True)
+    return parents
+
 def generate_random_path(G):
     arr=np.array(G.nodes)
     np.random.shuffle(arr)
@@ -170,9 +175,7 @@ class individual:
     def __init__(self, g, edge_list):
         self.G = g
         self.edge_list = edge_list
-    
-    def get_fitness(self):
-        return get_fitness(self.G, self.edge_list) 
+        self.fitness = get_fitness(g, edge_list)
 
     def set_edge_list(self, new_edge_list):
         self.edge_list = new_edge_list
@@ -196,10 +199,10 @@ class population:
         self.individuals = individuals
     
     def get_mean_fitness(self):
-        return np.mean([i.get_fitness() for i in self.individuals])
+        return np.mean([i.fitness for i in self.individuals])
 
     def get_fitnesses(self):
-        return [i.get_fitness() for i in self.individuals]
+        return [i.fitness for i in self.individuals]
 
     def get_paths(self):
         return [i.get_path() for i in self.individuals]
