@@ -10,7 +10,7 @@ import time
 # print(sys.argv[1])
 
 if len(sys.argv)==1:
-    filename="bier127.tsp"
+    filename="a280.tsp"
     print(f"TSP problem used:   {filename}")
     iterations=10000
     print(f"Num. iterations:    {iterations}")
