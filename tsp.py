@@ -45,11 +45,11 @@ def experiment(filename="bier127.tsp", iterations=1000, interval = 100, pop_size
     G = f.get_graph_from_file(filename)
 
     #random generation
-    population = f.generate_random_population(G,pop_size)
+    # population = f.generate_random_population(G,pop_size)
 
-    #1 individual is generated with closest neighbor alg
-    # population = f.generate_random_population(G,pop_size-1)
-    # population.append_individual(f.individual(G, f.get_edge_list(f.closest_neighbor_alg(G))))
+    # 1 individual is generated with closest neighbor alg
+    population = f.generate_random_population(G,pop_size-1)
+    population.append_individual(f.individual(G, f.get_edge_list(f.closest_neighbor_alg(G))))
 
     #loading generation
     # population = f.load_gen("results/"+filename[:-4]+"_gen_14999")
@@ -73,14 +73,14 @@ def experiment(filename="bier127.tsp", iterations=1000, interval = 100, pop_size
         if i%interval==0:  
             if outputs:
                 f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+ filename[:-4] + "_"+ str(i))
-            print("Iteration",i)
+            print("Iteration",i, "; Best fitness:", best)
 
     write_gen_results(population,filename,i)
     population.save_gen(f"{filename[:-4]}_gen_{i}")
-    f.plot_figure(G, next_gen.individuals[i_best].edge_list, name="results/"+ filename[:-4] + "_"+ str(i))
+    f.plot_figure(G, population.individuals[i_best].edge_list, name="results/"+ filename[:-4] + "_"+ str(i))
 
     took = time.time()-start
-    print(f"Best fitness: {next_gen.individuals[i_best].fitness}")
+    print(f"Best fitness: {population.individuals[i_best].fitness}")
     # print(f"It took {took:.1f} seconds")
 
     plt.clf()
@@ -93,5 +93,4 @@ def experiment(filename="bier127.tsp", iterations=1000, interval = 100, pop_size
     plt.savefig("results/" + filename[:-4] + "_progress_" + str(iterations) + "_popsize_" + str(pop_size) +".png")
     plt.close()
 
-    # for i in range(len(next_gen.individuals)):
-    #     f.plot_figure(G, next_gen.individuals[i].edge_list, name=str(i))
+    return population

@@ -7,9 +7,9 @@ import tsplib95
 # class that represents a graph
 class Graph:
 
-	def __init__(self, amount_vertices):
-		self.edges = {} # dictionary of edges
-		self.vertices = set() # set of vertices
+	def __init__(self, amount_vertices=0,vertices=[], edges={}):
+		self.edges = edges # dictionary of edges
+		self.vertices = set(vertices) # set of vertices
 		self.amount_vertices = amount_vertices # amount of vertices
 
 
@@ -196,7 +196,6 @@ class PSO:
 
 
 	def run(self):
-
 		# for each time step (iteration)
 		for t in range(self.iterations):
 
