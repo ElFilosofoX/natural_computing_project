@@ -1,4 +1,3 @@
-import math
 import networkx as nx
 import numpy as np
 import time
@@ -120,7 +119,7 @@ def test(nr_nodes, seed, t):
 
 
 def get_distance(node1, node2):
-    return math.dist(node1['coord'], node2['coord'])
+    return np.linalg.norm(np.array(node1['coord']) - np.array(node2['coord']))
 
 
 def get_dist_matrix(g):
