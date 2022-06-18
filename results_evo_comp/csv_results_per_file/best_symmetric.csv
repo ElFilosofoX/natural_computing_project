@@ -1,0 +1,17 @@
+,filename,iterations,pop_size,global_best,algorithm
+0,u159.tsp,10000,10,49865.7627159136,sym_results_CNA_start_checks_keep_best/
+1,eil51.tsp,10000,40,451.3221710024249,sym_results_CNA_start_no_checks/
+2,ulysses16.tsp,1000,40,6809.0,results_random_start_no_checks/
+3,kroA150.tsp,10000,40,32007.29947116572,sym_results_CNA_start_no_checks/
+4,ulysses22.tsp,10000,40,6981.0,results_random_start_no_checks/
+5,ch130.tsp,10000,40,7137.555994177925,sym_results_CNA_start_checks_no_keep_best/
+6,eil101.tsp,10000,40,735.7404043361429,sym_results_CNA_start_checks_keep_best/
+7,pr76.tsp,10000,40,126217.48016569745,sym_results_CNA_start_no_checks/
+8,berlin52.tsp,10000,40,8272.456083407711,sym_results_CNA_start_checks_keep_best/
+9,burma14.tsp,10000,10,3454.0,results_random_start_no_checks/
+10,ch150.tsp,10000,10,7378.472542826756,sym_results_CNA_start_checks_no_keep_best/
+11,bier127.tsp,10000,5,131363.33614386927,sym_results_CNA_start_checks_no_keep_best/
+12,eil76.tsp,10000,40,590.8046243716819,sym_results_CNA_start_no_checks/
+13,a280.tsp,10000,40,3062.487658678924,sym_results_CNA_start_checks_no_keep_best/
+14,kroC100.tsp,10000,20,23187.04824575886,sym_results_CNA_start_checks_no_keep_best/
+15,att48.tsp,10000,40,11213.0,sym_results_CNA_start_checks_keep_best/

@@ -1,0 +1,13 @@
+,iterations,pop_size,algorithm,global_best,optimum
+120,100,5,sym_results_CNA_start_checks_no_keep_best/,7897.882680970693,6528
+121,100,10,sym_results_CNA_start_checks_no_keep_best/,7897.882680970693,6528
+122,100,20,sym_results_CNA_start_checks_no_keep_best/,7897.882680970693,6528
+123,100,40,sym_results_CNA_start_checks_no_keep_best/,7897.882680970693,6528
+124,1000,5,sym_results_CNA_start_checks_no_keep_best/,7897.882680970693,6528
+125,1000,10,sym_results_CNA_start_checks_no_keep_best/,7777.632422520002,6528
+126,1000,20,sym_results_CNA_start_checks_no_keep_best/,7878.89168359359,6528
+127,1000,40,sym_results_CNA_start_checks_no_keep_best/,7897.882680970693,6528
+128,10000,5,sym_results_CNA_start_checks_no_keep_best/,7602.071715097885,6528
+129,10000,10,sym_results_CNA_start_checks_no_keep_best/,7378.472542826756,6528
+130,10000,20,sym_results_CNA_start_checks_no_keep_best/,7379.572506825033,6528
+131,10000,40,sym_results_CNA_start_checks_no_keep_best/,7759.632065001814,6528

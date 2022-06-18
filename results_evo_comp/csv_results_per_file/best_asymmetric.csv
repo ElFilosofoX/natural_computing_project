@@ -1,0 +1,11 @@
+,filename,iterations,pop_size,global_best,algorithm
+0,ftv33.atsp,10000,40,1375,asym_results_CNA_start_checks_no_keep_best/
+1,ftv38.atsp,10000,40,1650,asym_results_CNA_start_no_checks/
+2,p43.atsp,10000,40,5623,asym_results_CNA_start_checks_keep_best/
+3,br17.atsp,1000,40,39,results_random_start_no_checks/
+4,ftv47.atsp,10000,40,1997,results_random_start_no_checks/
+5,ry48p.atsp,10000,40,15231,asym_results_CNA_start_no_checks/
+6,ft70.atsp,10000,40,42456,asym_results_CNA_start_checks_keep_best/
+7,ftv35.atsp,10000,40,1503,asym_results_CNA_start_checks_keep_best/
+8,ftv44.atsp,10000,40,1752,asym_results_CNA_start_checks_keep_best/
+9,ft53.atsp,10000,40,7631,results_random_start_no_checks/
