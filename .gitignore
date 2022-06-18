@@ -1,2 +1,5 @@
 /results
 /results.txt
+
+__pycache__
+.direnv

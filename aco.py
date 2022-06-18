@@ -1,10 +1,11 @@
-import math
 import networkx as nx
 import numpy as np
 import time
+import tsplib95
 
-from numpy.random import default_rng
-from scipy.spatial import distance_matrix
+import pandas as pd
+
+from pathlib import Path
 
 
 def aco(g, fitness, ants, rng, max_time):
@@ -42,7 +43,7 @@ def aco(g, fitness, ants, rng, max_time):
     nodes = len(g.nodes)
     # pheromone, represented in an adjacency matrix
     parts = np.ones((nodes, nodes), dtype=float) / nodes
-    distances = get_dist_matrix(g)
+    distances = nx.to_numpy_array(g)
 
     while (current_time - start_time) < max_time:
         paths = np.empty((ants, nodes), dtype=int)
@@ -65,7 +66,7 @@ def aco(g, fitness, ants, rng, max_time):
                 paths[ant, i] = next_node
                 visited[next_node] = True
                 edges = np.ma.MaskedArray(parts[next_node], visited)
-                edges = edges / distances[next_node]
+                edges = edges / (distances[next_node] + 0.00001)
 
         # we change from arrays of nodes to arrays of edges, since this is
         # necessary for calculating the fitness
@@ -106,30 +107,51 @@ def aco(g, fitness, ants, rng, max_time):
     return times, bests_fit, bests_path
 
 
-def test(nr_nodes, seed, t):
-    rng = default_rng(seed)
-    positions = rng.random((nr_nodes, 2))
-    nodes = [(i, {"coord": positions[i]}) for i in range(nr_nodes)]
-    g = nx.Graph()
-    g.add_nodes_from(nodes)
-    a = aco(g, get_fitness, 50, rng, t)
-    fs = a[1]
-    print(fs)
-    print(np.min(fs))
-    return fs
-
-
-def get_distance(node1, node2):
-    return math.dist(node1['coord'], node2['coord'])
-
-
-def get_dist_matrix(g):
-    coords = np.array([x for i, x in g.nodes.data("coord")])
-    return distance_matrix(coords, coords)
-
-
 def get_fitness(G, edge_list):
     fitness = 0
     for pair in edge_list:
-        fitness += get_distance(G.nodes[pair[0]], G.nodes[pair[1]])
+        fitness += G.edges[pair[0], pair[1]]["weight"]
     return fitness
+
+
+FITNESS = get_fitness
+ANTS = 50
+RNG = np.random.default_rng(123)
+MAX_TIME = 60
+
+
+def run_from_csv(csv, data_dir, extension):
+    return (
+        pd.read_csv(csv)
+        .assign(
+            fitness=lambda frame:
+                frame.apply(
+                    lambda row:
+                    run_aco(data_dir / (str(row["dataset"]) + extension),
+                            FITNESS, ANTS, RNG,
+                            row["runtime"]),
+                    axis=1
+                )
+
+        )
+    )
+
+
+def run_all(data_dir):
+    probs = Path(data_dir).glob("*.tsp")
+    return pd.DataFrame(
+        {
+            "fitness": run_aco(p, FITNESS, ANTS, RNG, MAX_TIME),
+            "dataset": p
+        }
+        for p in probs
+    )
+
+
+def run_aco(filename, fitness, ants, rng, max_time):
+    prob = tsplib95.load(filename)
+    g = nx.convert_node_labels_to_integers(prob.get_graph())
+    times, fitnesses, paths = aco(g, fitness, ants, rng, max_time)
+    f = np.min(fitnesses)
+    print(f"{filename} done, f = {f}")
+    return f
